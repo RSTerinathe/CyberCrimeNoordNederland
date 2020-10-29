@@ -28,17 +28,12 @@ async def printGroups():
 async def main():
     await client.connect()
     await printGroups()
-    search = 'test'
-    result = await client(functions.contacts.SearchRequest(
-        q=search,
-        limit=100
-    ))
+    # search = 'test'
+    # result = await client(functions.contacts.SearchRequest(
+    #     q=search,
+    #     limit=100
+    # ))
     # print(result.stringify())
-    result = await client(functions.messages.SearchGlobalRequest(
-        q=search,
-        limit=100
-    ))
-    print(result.stringify())
 
 with client:
     client.loop.run_until_complete(main())
