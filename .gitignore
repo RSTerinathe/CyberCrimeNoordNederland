@@ -131,3 +131,6 @@ dmypy.json
 # PyCharm specific
 .idea/shelf/
 .idea/workspace.xml
+
+# Telethon sessions
+.session
