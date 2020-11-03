@@ -134,3 +134,6 @@ dmypy.json
 
 # Telethon sessions
 *.session
+
+# Config files
+*.ini
