@@ -10,12 +10,9 @@ config.read("./config/config.ini")
 # TODO: Fix the configparser so that it can use variables specified in config/config.ini
 # Currently the results do not get parsed to the necessary types
 
-# api_id = config['Telegram']['api_id']
-# api_hash = config['Telegram']['api_hash']
-# phone = config['Telegram']['phone']
-api_id = 1824836
-api_hash = 'bd24297310b73f78f370a37c18055985'
-phone = '+31636299589'
+api_id = config['Telegram']['api_id']
+api_hash = config['Telegram']['api_hash']
+phone = config['Telegram']['phone']
 
 # Start the asyncio event loop
 loop = asyncio.get_event_loop()
