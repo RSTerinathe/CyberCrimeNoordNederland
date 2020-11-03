@@ -7,10 +7,8 @@ from telethon import functions
 # Get the right values from the config
 config = configparser.ConfigParser()
 config.read("./config/config.ini")
-# TODO: Fix the configparser so that it can use variables specified in config/config.ini
-# Currently the results do not get parsed to the necessary types
 
-api_id = config['Telegram']['api_id']
+api_id = int(config['Telegram']['api_id'])
 api_hash = config['Telegram']['api_hash']
 phone = config['Telegram']['phone']
 
