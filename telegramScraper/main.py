@@ -16,6 +16,7 @@ phone = config['Telegram']['phone']
 loop = asyncio.get_event_loop()
 client = TelegramClient(phone, api_id, api_hash)
 
+#Test commit
 # Test function to print all the dialogs that a user has
 async def printGroups():
     async for dialog in client.iter_dialogs():
