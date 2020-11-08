@@ -3,6 +3,7 @@ import configparser
 
 from telethon import TelegramClient
 from telethon import functions
+from data import search_terms as st
 
 # Get the right values from the config
 config = configparser.ConfigParser()
@@ -16,7 +17,6 @@ phone = config['Telegram']['phone']
 loop = asyncio.get_event_loop()
 client = TelegramClient(phone, api_id, api_hash)
 
-#Test commit
 # Test function to print all the dialogs that a user has
 async def printGroups():
     async for dialog in client.iter_dialogs():
@@ -25,32 +25,44 @@ async def printGroups():
 
 # Test function for scraping a certain chat_id
 async def testScrapingGroup(chatid):
-    result = await client(functions.messages.GetFullChatRequest(chat_id=chatid))
+    result = await client(functions.messages.GetFullChatRequest(chat_id = chatid))
     print(result.stringify())
 
 # Test function to check whether the channels could be requested by only the username of a channel
 async def testScrapingChannel(channel_name):
-    result = await client(functions.channels.GetFullChannelRequest(channel= channel_name))
+    result = await client(functions.channels.GetFullChannelRequest(channel = channel_name))
     chats = result.chats
     for chat in chats:
-        all_participants = await client.get_participants(chat, aggressive=True)
+        all_participants = await client.get_participants(chat, aggressive = True)
         print(len(all_participants))
     # print(result.stringify())
 
+# Returns the results when searching for a specific term
+async def searchGroups(search_term):
+    result = await client(functions.contacts.SearchRequest(
+        q=search_term,
+        limit=100
+    ))
+    return result
+
+# Scrapes the groups found when searching using the search terms
+# @Parameter An array of search terms
+async def scrapeGroups(search_terms):
+    # For each search_term find the groups related to it and scrape them
+    for search_term in search_terms:
+        result = await searchGroups(search_term)
+        print(result.stringify())
+        #TODO: Actually scrape the groups
+
 async def main():
     await client.connect()
-    # await printGroups()
-    # await testScrapingGroup()
 
-    ### This returns the results of 'searching' for a specific name
-    ### We can then scrape the channels in the results by using their channel 'username'
-    # search = 'Groningen'
-    # result = await client(functions.contacts.SearchRequest(
-    #     q=search,
-    #     limit=100
-    # ))
-    # print(result.stringify())
-    await testScrapingChannel('wakkergroningen')
+    # Select the crimes that we want to search for
+    selected = st.Crimes.ACCOUNTS.value
+    search_terms = st.returnSearchTerms(selected)
+    # Use the search_terms to select groups
+    await scrapeGroups(search_terms)
+
 
 # Run the client loop
 with client:
