@@ -4,6 +4,7 @@ import configparser
 from telethon import TelegramClient
 from telethon import functions
 from data import search_terms as st
+from db import connection
 
 # Get the right values from the config
 config = configparser.ConfigParser()
@@ -17,24 +18,30 @@ phone = config['Telegram']['phone']
 loop = asyncio.get_event_loop()
 client = TelegramClient(phone, api_id, api_hash)
 
+
 # Test function to print all the dialogs that a user has
 async def printGroups():
     async for dialog in client.iter_dialogs():
         print(dialog)
         print('\n')
 
+
 # Test function for scraping a certain chat_id
 async def testScrapingGroup(chatid):
-    result = await client(functions.messages.GetFullChatRequest(chat_id = chatid))
+    result = await client(functions.messages.GetFullChatRequest(chat_id=chatid))
     print(result.stringify())
+
 
 # Test function to check whether the channels could be requested by only the username of a channel
 async def testScrapingChannel(channel_name):
-    result = await client(functions.channels.GetFullChannelRequest(channel = channel_name))
+    result = await client(functions.channels.GetFullChannelRequest(channel=channel_name))
     chats = result.chats
     for chat in chats:
-        all_participants = await client.get_participants(chat, aggressive = True)
-        print(len(all_participants))
+        all_participants = await client.get_participants(chat, aggressive=True)
+        messages = await client.get_messages(chat,5)
+        for message in messages:
+            print(message.message)
+        # print(len(all_participants))
     # print(result.stringify())
 
 # Returns the results when searching for a specific term
@@ -52,16 +59,23 @@ async def scrapeGroups(search_terms):
     for search_term in search_terms:
         result = await searchGroups(search_term)
         print(result.stringify())
-        #TODO: Actually scrape the groups
+        # TODO: Actually scrape the groups
+
 
 async def main():
+    # This is just for testing rn
+    # TODO: Cleanup the test (let connect stay) & Configure the config.ini
+    connection.connect("mongodb://localhost:27017/", "telegram_messages")
+    connection.insert({"test": "This is a test"}, "messages")
+    connection.printAll("messages")
     await client.connect()
 
     # Select the crimes that we want to search for
-    selected = st.Crimes.ACCOUNTS.value
-    search_terms = st.returnSearchTerms(selected)
-    # Use the search_terms to select groups
-    await scrapeGroups(search_terms)
+    # selected = st.Crimes.ACCOUNTS.value
+    # search_terms = st.returnSearchTerms(selected)
+    # # Use the search_terms to select groups
+    # await scrapeGroups(search_terms)
+    # await testScrapingChannel('wakkergroningen')
 
 
 # Run the client loop
