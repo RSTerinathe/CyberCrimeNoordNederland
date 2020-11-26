@@ -65,10 +65,15 @@ async def scrapeGroups(search_terms):
 async def main():
     # This is just for testing rn
     # TODO: Cleanup the test (let connect stay) & Configure the config.ini
-    connection.connect("mongodb://localhost:27017/", "telegram_messages")
-    connection.insert({"test": "This is a test"}, "messages")
-    connection.printAll("messages")
+    # connection.connect("mongodb://localhost:27017/", "telegram_messages")
+    # connection.insert({"test": "This is a test"}, "messages")
+    # connection.printAll("messages")
+    # await client.connect()
+    connection.connect(str(config['Telegram']['host_url']), "telegram_messages")
+    connection.insert({"test": "This is a test"}, "collection")
+    connection.printAll("collection")
     await client.connect()
+
 
     # Select the crimes that we want to search for
     # selected = st.Crimes.ACCOUNTS.value
