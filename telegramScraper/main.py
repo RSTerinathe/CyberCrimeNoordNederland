@@ -69,11 +69,10 @@ async def main():
     # connection.insert({"test": "This is a test"}, "messages")
     # connection.printAll("messages")
     # await client.connect()
-    connection.connect(str(config['Telegram']['host_url']), "telegram_messages")
-    connection.insert({"test": "This is a test"}, "collection")
-    connection.printAll("collection")
+    connection.connect(str(config['Telegram']['host_url']), str(config['Telegram']['database_name']))
+    connection.insert({"test": "This is a test"}, str(config['Telegram']['collection']))
+    connection.printAll(str(config['Telegram']['collection']))
     await client.connect()
-
 
     # Select the crimes that we want to search for
     # selected = st.Crimes.ACCOUNTS.value

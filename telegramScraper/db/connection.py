@@ -4,9 +4,9 @@ client = None
 db = None
 
 # TODO: Throw error when connecting failed
-def connect(host, database):
+def connect(host_url, database):
     global client, db
-    client = pymongo.MongoClient("mongodb+srv://user:notuser@cluster0.7hhoe.mongodb.net/telegram_messages?retryWrites=true&w=majority")
+    client = pymongo.MongoClient(host_url)
     db = client[database]
 
 def insert(message, collection):
